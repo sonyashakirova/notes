@@ -1,9 +1,8 @@
+import { Pages } from "pages";
+import { withProviders } from "./providers";
+
 const App = () => {
-  return (
-    <div>
-      <h1>Notes</h1>
-    </div>
-  );
+  return <Pages />;
 };
 
-export default App;
+export default withProviders(App);
