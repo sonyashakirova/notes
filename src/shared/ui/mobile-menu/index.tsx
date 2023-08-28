@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import { Drawer, Search, SelectableList } from "shared/ui";
+import { Fab } from "@mui/material";
 
 interface IMobileMenuProps {
   opened: boolean;
@@ -40,9 +41,19 @@ export const MobileMenu = ({
         }}
         currentId={currentId}
       />
-      <StyledIconButton size="large" color="inherit">
+      {/* <StyledIconButton size="large" color="inherit">
         <AddIcon />
-      </StyledIconButton>
+      </StyledIconButton> */}
+      <Fab
+        color="secondary"
+        sx={{
+          position: "absolute",
+          bottom: (theme) => theme.spacing(2),
+          right: (theme) => theme.spacing(2),
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </Drawer>
   );
 };

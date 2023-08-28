@@ -1,12 +1,17 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "shared/config/firebase";
 import { INote } from "shared/types/note";
 import { Footer, Header, Sidebar, Workspace } from "shared/ui";
+import { useAuth } from "shared/hooks";
 
 const Note = () => {
-  const notesCollectionRef = query(collection(db, "notes"));
+  const { user } = useAuth();
+  const notesCollectionRef = query(
+    collection(db, "notes"),
+    where("userId", "==", user?.uid)
+  );
 
   const [notes, setNotes] = useState<INote[]>([]);
   const [currentId, setCurrentId] = useState(notes[0]?.id);

@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { MobileMenu, Search } from "shared/ui";
+import { useAuth } from "shared/hooks";
 
 interface ISidebarProps {
   notes: any[];
@@ -17,6 +18,7 @@ interface ISidebarProps {
 
 export const Header = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
   const [openMenu, setOpenMenu] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
@@ -54,7 +56,7 @@ export const Header = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
             <IconButton size="large" color="inherit">
               <AccountCircleIcon />
             </IconButton>
-            <Typography>Sofia</Typography>
+            <Typography>{user?.displayName}</Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Search light />
             <IconButton size="large" color="inherit">
