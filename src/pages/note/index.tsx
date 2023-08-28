@@ -1,19 +1,13 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { Footer, Header, Sidebar } from "shared/ui";
-
-interface INote {
-  id: string;
-  title: string;
-  content: string;
-  created: any;
-  updated: any;
-  userId?: string;
-}
+import { INote } from "shared/types/note";
+import { Footer, Header, Sidebar, Workspace } from "shared/ui";
 
 const Note = () => {
   const [notes, setNotes] = useState<INote[]>([]);
   const [currentId, setCurrentId] = useState(notes[0]?.id);
+
+  const currentNote = notes?.find((note) => note?.id === currentId);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -24,7 +18,7 @@ const Note = () => {
           currentId={currentId}
           setCurrentId={setCurrentId}
         />
-        <h1>Note Page</h1>
+        <Workspace note={currentNote} />
       </Box>
       <Footer />
     </Box>
