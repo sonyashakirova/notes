@@ -1,8 +1,10 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface INote {
   id: string;
   title: string;
   content: string;
-  created: any;
-  updated: any;
+  created: Timestamp;
+  updated: Timestamp;
   userId: string;
 }
