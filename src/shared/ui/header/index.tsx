@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
+import { Search } from "shared/ui";
 
 interface ISidebarProps {}
 
@@ -36,6 +37,7 @@ export const Header = ({}: ISidebarProps) => {
             </IconButton>
             <Typography>Sofia</Typography>
             <Box sx={{ flexGrow: 1 }} />
+            <Search light />
             <IconButton size="large" color="inherit">
               <EditIcon />
             </IconButton>
