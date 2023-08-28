@@ -1,0 +1,30 @@
+.drawer {
+  background-color: white;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;
+  position: fixed;
+  top: 56px;
+  height: calc(100svh - 56px);
+  width: 100svw;
+  padding: 16px;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.drawer.left {
+  left: -100svw;
+}
+
+.drawer.left.show {
+  left: 0;
+}
+
+.drawer.right {
+  right: -100svw;
+}
+
+.drawer.right.show {
+  right: 0;
+}
