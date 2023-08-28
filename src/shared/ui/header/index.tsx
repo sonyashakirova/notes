@@ -9,9 +9,13 @@ import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { MobileMenu, Search } from "shared/ui";
 
-interface ISidebarProps {}
+interface ISidebarProps {
+  notes: any[];
+  currentId: string;
+  setCurrentId: (id: string) => void;
+}
 
-export const Header = ({}: ISidebarProps) => {
+export const Header = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
   const [openMenu, setOpenMenu] = useState(false);
 
   return (
@@ -30,7 +34,13 @@ export const Header = ({}: ISidebarProps) => {
             >
               {openMenu ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
-            <MobileMenu opened={openMenu} />
+            <MobileMenu
+              opened={openMenu}
+              setOpened={setOpenMenu}
+              notes={notes}
+              currentId={currentId}
+              setCurrentId={setCurrentId}
+            />
             <Box sx={{ flexGrow: 1 }} />
             <IconButton size="large" color="inherit">
               <AccountCircleIcon />

@@ -1,16 +1,45 @@
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import { Drawer, Search } from "shared/ui";
+import { Drawer, Search, SelectableList } from "shared/ui";
 
 interface IMobileMenuProps {
   opened: boolean;
+  setOpened: (opened: boolean) => void;
+  notes: any[];
+  currentId: string;
+  setCurrentId: (id: string) => void;
 }
 
-export const MobileMenu = ({ opened }: IMobileMenuProps) => {
+export const MobileMenu = ({
+  opened,
+  setOpened,
+  notes,
+  currentId,
+  setCurrentId,
+}: IMobileMenuProps) => {
   return (
     <Drawer from="left" opened={opened}>
       <Search />
+      <SelectableList
+        sx={{
+          marginTop: "24px",
+          maxHeight: "calc(100svh - 240px)",
+        }}
+        items={notes?.map((note) => ({
+          id: note.id,
+          primary: note.title,
+          secondary: note.updated.toDate().toLocaleDateString("ru-RU", {
+            hour: "numeric",
+            minute: "numeric",
+          }),
+        }))}
+        onSelectItem={(id) => {
+          setCurrentId(id);
+          setOpened(false);
+        }}
+        currentId={currentId}
+      />
       <StyledIconButton size="large" color="inherit">
         <AddIcon />
       </StyledIconButton>

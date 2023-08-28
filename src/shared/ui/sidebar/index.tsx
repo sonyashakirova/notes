@@ -28,7 +28,7 @@ export const Sidebar = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
           }),
           sx: { width: "360px", padding: "0 40px 0 30px" },
         }))}
-        onSelect={setCurrentId}
+        onSelectItem={setCurrentId}
         currentId={currentId}
       />
     </Box>
