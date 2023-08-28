@@ -4,12 +4,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
-import { Search } from "shared/ui";
+import { useState } from "react";
+import { MobileMenu, Search } from "shared/ui";
 
 interface ISidebarProps {}
 
 export const Header = ({}: ISidebarProps) => {
+  const [openMenu, setOpenMenu] = useState(false);
+
   return (
     <>
       <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -19,9 +23,14 @@ export const Header = ({}: ISidebarProps) => {
           sx={{ boxShadow: "none" }}
         >
           <Toolbar>
-            <IconButton size="large" color="inherit">
-              <MenuIcon />
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => setOpenMenu((o) => !o)}
+            >
+              {openMenu ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
+            <MobileMenu opened={openMenu} />
             <Box sx={{ flexGrow: 1 }} />
             <IconButton size="large" color="inherit">
               <AccountCircleIcon />
