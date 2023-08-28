@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Header } from "shared/ui";
+import { Footer, Header } from "shared/ui";
 
 const Note = () => {
   return (
@@ -8,6 +8,7 @@ const Note = () => {
       <Box sx={{ display: "flex", flexGrow: 1 }}>
         <h1>Note Page</h1>
       </Box>
+      <Footer />
     </Box>
   );
 };
