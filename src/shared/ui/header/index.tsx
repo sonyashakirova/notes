@@ -10,13 +10,19 @@ import { useState } from "react";
 import { MobileMenu, Search } from "shared/ui";
 import { useAuth } from "shared/hooks";
 
-interface ISidebarProps {
+interface IHeaderProps {
   notes: any[];
   currentId: string;
   setCurrentId: (id: string) => void;
+  createNewNote: () => void;
 }
 
-export const Header = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
+export const Header = ({
+  notes,
+  currentId,
+  setCurrentId,
+  createNewNote,
+}: IHeaderProps) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { user } = useAuth();
 
@@ -42,6 +48,7 @@ export const Header = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
               notes={notes}
               currentId={currentId}
               setCurrentId={setCurrentId}
+              createNewNote={createNewNote}
             />
             <Box sx={{ flexGrow: 1 }} />
             <IconButton size="large" color="inherit">
@@ -65,7 +72,7 @@ export const Header = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
             <IconButton size="large" color="inherit">
               <DeleteIcon />
             </IconButton>
-            <IconButton size="large" color="inherit">
+            <IconButton size="large" color="inherit" onClick={createNewNote}>
               <AddIcon />
             </IconButton>
           </Toolbar>
