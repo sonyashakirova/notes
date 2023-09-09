@@ -9,6 +9,7 @@ interface IMobileMenuProps {
   currentId: string;
   setCurrentId: (id: string) => void;
   createNewNote: () => void;
+  deleteNote: (id: string) => void;
 }
 
 export const MobileMenu = ({
@@ -18,6 +19,7 @@ export const MobileMenu = ({
   currentId,
   setCurrentId,
   createNewNote,
+  deleteNote,
 }: IMobileMenuProps) => {
   return (
     <Drawer from="left" opened={opened}>
@@ -39,6 +41,7 @@ export const MobileMenu = ({
           setCurrentId(id);
           setOpened(false);
         }}
+        onDeleteItem={deleteNote}
         currentId={currentId}
       />
       <Fab

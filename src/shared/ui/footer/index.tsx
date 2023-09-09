@@ -5,11 +5,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
 interface IFooterProps {
+  currentId: string;
   createNewNote: () => void;
   setEditMode: (prev: (params: boolean) => boolean) => void;
+  deleteNote: (id: string) => void;
 }
 
-export const Footer = ({ createNewNote, setEditMode }: IFooterProps) => {
+export const Footer = ({
+  currentId,
+  createNewNote,
+  setEditMode,
+  deleteNote,
+}: IFooterProps) => {
   return (
     <Box sx={{ display: { xs: "flex", md: "none" } }}>
       <Paper
@@ -32,7 +39,13 @@ export const Footer = ({ createNewNote, setEditMode }: IFooterProps) => {
             marginRight: "auto",
           }}
         >
-          <IconButton size="large" color="inherit">
+          <IconButton
+            size="large"
+            color="inherit"
+            onClick={() => {
+              deleteNote(currentId);
+            }}
+          >
             <DeleteIcon />
           </IconButton>
           <IconButton

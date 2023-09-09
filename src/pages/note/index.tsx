@@ -1,8 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   getDocs,
   orderBy,
   query,
@@ -51,10 +53,23 @@ const Note = () => {
     }
   };
 
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState(currentId);
+
+  const deleteNote = async (id: string) => {
+    const noteDoc = doc(db, "notes", id);
+    await deleteDoc(noteDoc);
+  };
+
+  const onDeleteNote = (id: string) => {
+    setDeleteDialog(true);
+    setNoteToDelete(id);
+  };
+
   useEffect(() => {
     getNotes();
     setCurrentId(notes[0]?.id);
-  }, [notes]);
+  }, [notes, deleteNote]);
 
   const currentNote = notes?.find((note) => note?.id === currentId);
 
@@ -66,6 +81,7 @@ const Note = () => {
         setCurrentId={setCurrentId}
         createNewNote={createNewNote}
         setEditMode={setEditMode}
+        deleteNote={onDeleteNote}
       />
       <Box
         sx={(theme) => ({
@@ -85,14 +101,26 @@ const Note = () => {
           <Workspace note={currentNote} />
         ) : (
           <Box sx={{ padding: "20px 40px" }}>
-            <h1>{currentNote?.title ?? "Title"}</h1>
+            <h1>{currentNote?.title ?? "Untitled"}</h1>
             <Markdown>
               {currentNote?.content.split("\n").join("\n\n") ?? ""}
             </Markdown>
           </Box>
         )}
       </Box>
-      <Footer createNewNote={createNewNote} setEditMode={setEditMode} />
+      <Footer
+        currentId={currentId}
+        createNewNote={createNewNote}
+        setEditMode={setEditMode}
+        deleteNote={onDeleteNote}
+      />
+      <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
+        <DialogTitle>Are you sure you want to delete this note?</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog(false)}>No</Button>
+          <Button onClick={() => deleteNote(noteToDelete)}>Yes</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

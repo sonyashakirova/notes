@@ -16,6 +16,7 @@ interface IHeaderProps {
   setCurrentId: (id: string) => void;
   createNewNote: () => void;
   setEditMode: (prev: (params: boolean) => boolean) => void;
+  deleteNote: (id: string) => void;
 }
 
 export const Header = ({
@@ -24,6 +25,7 @@ export const Header = ({
   setCurrentId,
   createNewNote,
   setEditMode,
+  deleteNote,
 }: IHeaderProps) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { user } = useAuth();
@@ -51,6 +53,7 @@ export const Header = ({
               currentId={currentId}
               setCurrentId={setCurrentId}
               createNewNote={createNewNote}
+              deleteNote={deleteNote}
             />
             <Box sx={{ flexGrow: 1 }} />
             <IconButton size="large" color="inherit">
@@ -75,7 +78,11 @@ export const Header = ({
             >
               <EditIcon />
             </IconButton>
-            <IconButton size="large" color="inherit">
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => deleteNote(currentId)}
+            >
               <DeleteIcon />
             </IconButton>
             <IconButton size="large" color="inherit" onClick={createNewNote}>
