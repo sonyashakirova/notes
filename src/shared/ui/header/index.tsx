@@ -15,6 +15,7 @@ interface IHeaderProps {
   currentId: string;
   setCurrentId: (id: string) => void;
   createNewNote: () => void;
+  setEditMode: (prev: (params: boolean) => boolean) => void;
 }
 
 export const Header = ({
@@ -22,6 +23,7 @@ export const Header = ({
   currentId,
   setCurrentId,
   createNewNote,
+  setEditMode,
 }: IHeaderProps) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { user } = useAuth();
@@ -66,7 +68,11 @@ export const Header = ({
             <Typography>{user?.displayName}</Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Search light />
-            <IconButton size="large" color="inherit">
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => setEditMode((s) => !s)}
+            >
               <EditIcon />
             </IconButton>
             <IconButton size="large" color="inherit">

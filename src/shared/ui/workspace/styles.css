@@ -1,0 +1,26 @@
+#workspace-wrapper {
+  width: 100%;
+}
+
+.EasyMDEContainer {
+  height: calc(100svh - 320px);
+}
+
+@media (min-width: 900px) {
+  .EasyMDEContainer {
+    height: calc(100svh - 260px);
+  }
+}
+
+.EasyMDEContainer .CodeMirror {
+  height: 100%;
+}
+
+.title-input {
+  border: none;
+  margin: 20px;
+  padding: 10px;
+  font-size: 40px;
+  max-width: 90vw;
+  box-sizing: border-box;
+}

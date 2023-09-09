@@ -12,6 +12,7 @@ import { db } from "shared/config/firebase";
 import { INote } from "shared/types/note";
 import { Footer, Header, Sidebar, Workspace } from "shared/ui";
 import { useAuth } from "shared/hooks";
+import Markdown from "markdown-to-jsx";
 
 const Note = () => {
   const { user } = useAuth();
@@ -20,9 +21,11 @@ const Note = () => {
   const [notes, setNotes] = useState<INote[]>([]);
   const [currentId, setCurrentId] = useState(notes[0]?.id);
 
+  const [editMode, setEditMode] = useState(false);
+
   const createNewNote = async () => {
     await addDoc(notesCollectionRef, {
-      title: "New note",
+      title: "Untitled",
       content: "",
       created: new Date(),
       updated: new Date(),
@@ -62,16 +65,34 @@ const Note = () => {
         currentId={currentId}
         setCurrentId={setCurrentId}
         createNewNote={createNewNote}
+        setEditMode={setEditMode}
       />
-      <Box sx={{ display: "flex", flexGrow: 1 }}>
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          [theme.breakpoints.up("md")]: {
+            gridTemplateColumns: "360px auto",
+          },
+          flexGrow: 1,
+        })}
+      >
         <Sidebar
           notes={notes}
           currentId={currentId}
           setCurrentId={setCurrentId}
         />
-        <Workspace note={currentNote} />
+        {editMode ? (
+          <Workspace note={currentNote} />
+        ) : (
+          <Box sx={{ padding: "20px 40px" }}>
+            <h1>{currentNote?.title ?? "Title"}</h1>
+            <Markdown>
+              {currentNote?.content.split("\n").join("\n\n") ?? ""}
+            </Markdown>
+          </Box>
+        )}
       </Box>
-      <Footer createNewNote={createNewNote} />
+      <Footer createNewNote={createNewNote} setEditMode={setEditMode} />
     </Box>
   );
 };

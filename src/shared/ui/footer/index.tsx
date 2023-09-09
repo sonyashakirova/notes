@@ -6,9 +6,10 @@ import AddIcon from "@mui/icons-material/Add";
 
 interface IFooterProps {
   createNewNote: () => void;
+  setEditMode: (prev: (params: boolean) => boolean) => void;
 }
 
-export const Footer = ({ createNewNote }: IFooterProps) => {
+export const Footer = ({ createNewNote, setEditMode }: IFooterProps) => {
   return (
     <Box sx={{ display: { xs: "flex", md: "none" } }}>
       <Paper
@@ -34,7 +35,11 @@ export const Footer = ({ createNewNote }: IFooterProps) => {
           <IconButton size="large" color="inherit">
             <DeleteIcon />
           </IconButton>
-          <IconButton size="large" color="inherit">
+          <IconButton
+            size="large"
+            color="inherit"
+            onClick={() => setEditMode((s) => !s)}
+          >
             <EditIcon />
           </IconButton>
           <IconButton size="large" color="inherit" onClick={createNewNote}>
