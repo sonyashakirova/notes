@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "shared/hooks";
+import { useAuth } from "features";
 import { Loading } from "shared/ui";
 
 export function PrivateRoute() {

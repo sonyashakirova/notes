@@ -3,11 +3,11 @@ import { SelectableList } from "shared/ui";
 
 interface ISidebarProps {
   notes: any[];
-  currentId: string;
-  setCurrentId: (noteId: string) => void;
+  currentId?: string;
+  onSelect: (id: string) => void;
 }
 
-export const Sidebar = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
+export const Sidebar = ({ notes, currentId, onSelect }: ISidebarProps) => {
   return (
     <Box
       sx={{
@@ -28,7 +28,7 @@ export const Sidebar = ({ notes, currentId, setCurrentId }: ISidebarProps) => {
           }),
           sx: { width: "360px", padding: "0 40px 0 30px" },
         }))}
-        onSelectItem={setCurrentId}
+        onSelect={onSelect}
         currentId={currentId}
       />
     </Box>

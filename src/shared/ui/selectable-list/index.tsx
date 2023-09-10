@@ -13,20 +13,20 @@ interface IListProps {
   items: {
     id: string;
     primary: string;
-    secondary?: string;
+    secondary?: string | React.ReactNode;
     sx?: SxProps<Theme>;
   }[];
-  currentId: string;
-  onSelectItem: (id: string) => void;
-  onDeleteItem?: (id: string) => void;
+  currentId?: string;
+  onSelect: (id: string) => void;
+  onDelete?: (id: string) => void;
   sx?: SxProps<Theme>;
 }
 
 export const SelectableList = ({
   items,
   currentId,
-  onSelectItem,
-  onDeleteItem,
+  onSelect,
+  onDelete,
   sx,
 }: IListProps) => {
   return (
@@ -38,13 +38,13 @@ export const SelectableList = ({
               sx={item.sx}
               primary={item.primary}
               secondary={item.secondary}
-              onClick={() => onSelectItem(item.id)}
+              onClick={() => onSelect(item.id)}
             />
-            {!!onDeleteItem && (
+            {!!onDelete && (
               <IconButton
                 size="small"
                 color="inherit"
-                onClick={() => onDeleteItem(item.id)}
+                onClick={() => onDelete(item.id)}
               >
                 <DeleteIcon />
               </IconButton>

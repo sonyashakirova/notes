@@ -3,39 +3,35 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
 interface ISearchProps {
-  light?: boolean;
+  value: string;
+  onChange: (value: string) => void;
 }
 
-export const Search = ({ light }: ISearchProps) => {
+export const Search = ({ value, onChange }: ISearchProps) => {
   return (
-    <SearchWrapper light={light}>
+    <SearchWrapper>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
       />
     </SearchWrapper>
   );
 };
 
-const SearchWrapper = styled("div")<ISearchProps>(({ theme, light }) => ({
+const SearchWrapper = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: light
-    ? alpha(theme.palette.common.white, 0.15)
-    : alpha(theme.palette.primary.main, 0.15),
+  backgroundColor: alpha(theme.palette.primary.main, 0.15),
   "&:hover": {
-    backgroundColor: light
-      ? alpha(theme.palette.common.white, 0.25)
-      : alpha(theme.palette.primary.main, 0.25),
+    backgroundColor: alpha(theme.palette.primary.main, 0.25),
   },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
     width: "auto",
   },
 }));

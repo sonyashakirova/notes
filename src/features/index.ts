@@ -1,2 +1,4 @@
 export { useAuth } from "./handle-auth";
-export { useNotes } from "./handle-note";
+export { useAutosave } from "./handle-autosave";
+export { useNotes } from "./handle-notes";
+export { useSearch } from "./handle-search";

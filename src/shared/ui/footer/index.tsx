@@ -5,61 +5,43 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
 interface IFooterProps {
-  currentId: string;
-  createNewNote: () => void;
-  setEditMode: (prev: (params: boolean) => boolean) => void;
-  deleteNote: (id: string) => void;
+  onCreate: () => void;
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
-export const Footer = ({
-  currentId,
-  createNewNote,
-  setEditMode,
-  deleteNote,
-}: IFooterProps) => {
+export const Footer = ({ onCreate, onDelete, onEdit }: IFooterProps) => {
   return (
-    <Box sx={{ display: { xs: "flex", md: "none" } }}>
-      <Paper
+    <Paper
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "primary.main",
+        borderRadius: 0,
+      }}
+      elevation={3}
+    >
+      <Box
         sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "primary.main",
-          borderRadius: 0,
+          maxWidth: "360px",
+          display: "flex",
+          justifyContent: "space-around",
+          marginLeft: "auto",
+          marginRight: "auto",
         }}
-        elevation={3}
       >
-        <Box
-          sx={{
-            maxWidth: "360px",
-            display: "flex",
-            justifyContent: "space-around",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <IconButton
-            size="large"
-            color="inherit"
-            onClick={() => {
-              deleteNote(currentId);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-          <IconButton
-            size="large"
-            color="inherit"
-            onClick={() => setEditMode((s) => !s)}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton size="large" color="inherit" onClick={createNewNote}>
-            <AddIcon />
-          </IconButton>
-        </Box>
-      </Paper>
-    </Box>
+        <IconButton size="large" color="inherit" onClick={onDelete}>
+          <DeleteIcon />
+        </IconButton>
+        <IconButton size="large" color="inherit" onClick={onEdit}>
+          <EditIcon />
+        </IconButton>
+        <IconButton size="large" color="inherit" onClick={onCreate}>
+          <AddIcon />
+        </IconButton>
+      </Box>
+    </Paper>
   );
 };

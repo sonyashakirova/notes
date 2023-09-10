@@ -11,13 +11,14 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "shared/config/firebase";
-import { INote } from "./types";
+import { INote } from "shared/types/note";
 
 export const useNotes = (userId?: string) => {
   const notesCollectionRef = collection(db, "notes");
 
   const [notes, setNotes] = useState<INote[]>([]);
-  const [currentNote, setCurrentNote] = useState<INote | null>(null);
+  const [currentId, setCurrentId] = useState<string | undefined>();
+  const currentNote = notes.find((note) => note.id === currentId);
 
   const createNewNote = async () => {
     await addDoc(notesCollectionRef, {
@@ -27,6 +28,8 @@ export const useNotes = (userId?: string) => {
       updated: new Date(),
       userId,
     });
+
+    await getNotes();
   };
 
   const getNotes = async () => {
@@ -52,6 +55,7 @@ export const useNotes = (userId?: string) => {
     data: { title: string; content: string }
   ) => {
     if (id) {
+      console.log("updated", data);
       const noteDoc = doc(db, "notes", id);
       await updateDoc(noteDoc, {
         title: data.title ?? "Untitled",
@@ -65,18 +69,23 @@ export const useNotes = (userId?: string) => {
     if (id) {
       const noteDoc = doc(db, "notes", id);
       await deleteDoc(noteDoc);
+      await getNotes();
     }
   };
 
   useEffect(() => {
     getNotes();
-    setCurrentNote(notes[0]);
-  }, [createNewNote, deleteNote]);
+  }, []);
+
+  useEffect(() => {
+    setCurrentId(notes[0]?.id);
+  }, [notes]);
 
   return {
     notes,
+    currentId,
+    setCurrentId,
     currentNote,
-    setCurrentNote,
     createNewNote,
     updateNote,
     deleteNote,

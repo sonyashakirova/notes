@@ -1,6 +1,6 @@
-import { AuthContext, login, logout, register } from "features/handle-auth";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { AuthContext, login, logout, register } from "features/handle-auth";
 import { auth } from "shared/config/firebase";
 
 export const withAuth = (component: () => React.ReactNode) => () => {
