@@ -1,11 +1,7 @@
-import {
-  onAuthStateChanged,
-  signOut,
-  User as FirebaseUser,
-} from "firebase/auth";
+import { AuthContext, login, logout, register } from "features/handle-auth";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { auth } from "shared/config/firebase";
-import { AuthContext } from "shared/hooks/useAuth";
 
 export const withAuth = (component: () => React.ReactNode) => () => {
   const [user, setUser] = useState<FirebaseUser | undefined | null>();
@@ -18,12 +14,8 @@ export const withAuth = (component: () => React.ReactNode) => () => {
     return () => unsubscribe();
   }, []);
 
-  const logout = async () => {
-    await signOut(auth);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, logout }}>
+    <AuthContext.Provider value={{ user, register, login, logout }}>
       {component()}
     </AuthContext.Provider>
   );

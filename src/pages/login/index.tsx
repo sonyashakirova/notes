@@ -1,34 +1,43 @@
 import { Alert, Button, Snackbar, TextField } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from "features";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "shared/config/firebase";
 import { Form } from "shared/ui/form";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
   const [errorMessage, setErrorMessage] = useState("");
   const [openError, setOpenError] = useState(false);
 
-  const login = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
-    } catch (error) {
-      // @ts-ignore
-      setErrorMessage(error.message ?? "Unknown error");
-      setOpenError(true);
-    }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    login(
+      formData,
+      () => navigate("/"),
+      (error) => {
+        setErrorMessage(error ?? "Unknown error");
+        setOpenError(true);
+      }
+    );
   };
 
   return (
     <Form
       title="Login"
-      onSubmit={login}
+      onSubmit={handleSubmit}
       buttons={
         <>
           <Button
@@ -47,18 +56,20 @@ const Login = () => {
       <TextField
         required
         id="outlined-email-input"
+        name="email"
         label="Email"
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={formData.email}
+        onChange={handleChange}
       />
       <TextField
         required
         id="outlined-password-input"
+        name="password"
         label="Password"
         type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={formData.password}
+        onChange={handleChange}
       />
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}

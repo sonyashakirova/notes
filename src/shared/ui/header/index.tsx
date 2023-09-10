@@ -1,4 +1,12 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Dialog,
+  DialogContent,
+  Popover,
+  Button,
+} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -7,8 +15,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import { MobileMenu, Search } from "shared/ui";
-import { useAuth } from "shared/hooks";
+import { MobileMenu, Search, SelectableList } from "shared/ui";
+import SearchIcon from "@mui/icons-material/Search";
+import { useAuth } from "features";
 
 interface IHeaderProps {
   notes: any[];
@@ -28,7 +37,11 @@ export const Header = ({
   deleteNote,
 }: IHeaderProps) => {
   const [openMenu, setOpenMenu] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [openSearch, setOpenSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   return (
     <>
@@ -56,21 +69,60 @@ export const Header = ({
               deleteNote={deleteNote}
             />
             <Box sx={{ flexGrow: 1 }} />
-            <IconButton size="large" color="inherit">
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+            >
               <AccountCircleIcon />
             </IconButton>
+            <Popover
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Button sx={{ margin: "10px 14px" }} onClick={logout}>
+                Logout
+              </Button>
+            </Popover>
           </Toolbar>
         </AppBar>
       </Box>
       <Box sx={{ display: { xs: "none", md: "flex" } }}>
         <AppBar position="static" sx={{ boxShadow: "none" }}>
           <Toolbar>
-            <IconButton size="large" color="inherit">
-              <AccountCircleIcon />
-            </IconButton>
-            <Typography>{user?.displayName}</Typography>
+            <Button
+              color="inherit"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+              startIcon={<AccountCircleIcon />}
+            >
+              {user?.displayName}
+            </Button>
+            <Popover
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Button sx={{ margin: "10px 14px" }} onClick={logout}>
+                Logout
+              </Button>
+            </Popover>
             <Box sx={{ flexGrow: 1 }} />
-            <Search light />
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => setOpenSearch(true)}
+            >
+              <SearchIcon />
+            </IconButton>
             <IconButton
               size="large"
               color="inherit"
@@ -90,6 +142,55 @@ export const Header = ({
             </IconButton>
           </Toolbar>
         </AppBar>
+        <Dialog
+          open={openSearch}
+          onClose={() => setOpenSearch(false)}
+          maxWidth="md"
+          fullWidth
+          scroll="paper"
+        >
+          <DialogContent sx={{ height: "500px" }} dividers>
+            <Search value={searchValue} onChange={setSearchValue} />
+            <SelectableList
+              items={notes
+                ?.filter(
+                  (note) =>
+                    (searchValue &&
+                      note?.title
+                        ?.toLowerCase()
+                        .includes(searchValue.toLowerCase())) ||
+                    (searchValue &&
+                      note?.content
+                        ?.toLowerCase()
+                        .includes(searchValue.toLowerCase()))
+                )
+                ?.map((note) => {
+                  const reg = new RegExp(
+                    `[а-яА-Яa-zA-Z0-9]*${searchValue}[а-яА-Яa-zA-Z0-9]*`,
+                    "i"
+                  );
+                  const contentMatch = note?.content.match(reg);
+
+                  return {
+                    id: note.id,
+                    primary: note.title,
+                    secondary: contentMatch ? (
+                      <>
+                        {`…${contentMatch[0]}…`}
+                        <br />
+                        {note?.updated}
+                      </>
+                    ) : (
+                      note?.updated
+                    ),
+                  };
+                })}
+              onSelectItem={(id) => {
+                setCurrentId(id);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
       </Box>
     </>
   );

@@ -1,37 +1,44 @@
 import { Alert, Button, Snackbar, TextField } from "@mui/material";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useAuth } from "features";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "shared/config/firebase";
 import { Form } from "shared/ui/form";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const [errorMessage, setErrorMessage] = useState("");
   const [openError, setOpenError] = useState(false);
 
-  const register = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // @ts-ignore
-      await updateProfile(auth.currentUser, { displayName: name });
-      navigate("/");
-    } catch (error) {
-      // @ts-ignore
-      setErrorMessage(error.message ?? "Unknown error");
-      setOpenError(true);
-    }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    register(
+      formData,
+      () => navigate("/"),
+      (error) => {
+        setErrorMessage(error ?? "Unknown error");
+        setOpenError(true);
+      }
+    );
   };
 
   return (
     <Form
       title="Register"
-      onSubmit={register}
+      onSubmit={handleSubmit}
       buttons={
         <>
           <Button
@@ -50,26 +57,29 @@ const Register = () => {
       <TextField
         required
         id="register-name"
+        name="name"
         label="Name"
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={formData.name}
+        onChange={handleChange}
       />
       <TextField
         required
         id="register-email"
+        name="email"
         label="Email"
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={formData.email}
+        onChange={handleChange}
       />
       <TextField
         required
         id="register-password"
+        name="password"
         label="Password"
         type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={formData.password}
+        onChange={handleChange}
       />
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}

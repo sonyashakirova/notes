@@ -13,8 +13,8 @@ import {
 import { db } from "shared/config/firebase";
 import { INote } from "shared/types/note";
 import { Footer, Header, Sidebar, Workspace } from "shared/ui";
-import { useAuth } from "shared/hooks";
 import Markdown from "markdown-to-jsx";
+import { useAuth } from "features";
 
 const Note = () => {
   const { user } = useAuth();
@@ -69,7 +69,7 @@ const Note = () => {
   useEffect(() => {
     getNotes();
     setCurrentId(notes[0]?.id);
-  }, [notes, deleteNote]);
+  }, []);
 
   const currentNote = notes?.find((note) => note?.id === currentId);
 
