@@ -9,8 +9,8 @@ import {
   Fab,
 } from "@mui/material";
 import Markdown from "markdown-to-jsx";
-import { useState } from "react";
-import { useAuth, useAutosave, useNotes, useSearch } from "features";
+import { useEffect, useState } from "react";
+import { useAuth, useNotes, useSearch } from "features";
 import {
   Drawer,
   PageLayout,
@@ -19,10 +19,10 @@ import {
   Sidebar,
   Workspace,
 } from "shared/ui";
-import { logout } from "features/handle-auth";
+import { INote } from "shared/types/note";
 
 const Note = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const {
     notes,
     currentId,
@@ -34,8 +34,36 @@ const Note = () => {
   } = useNotes(user?.uid);
   const { searchValue, setSearchValue, filteredNotes, getContentMatch } =
     useSearch(notes);
-  const { editMode, setEditMode, title, setTitle, content, setContent } =
-    useAutosave(currentNote, updateNote);
+
+  const [editMode, setEditMode] = useState(false);
+  const [workspaceData, setWorkspaceData] = useState<INote | undefined>();
+
+  useEffect(() => {
+    setEditMode(false);
+  }, [currentId]);
+
+  useEffect(() => {
+    if (editMode) {
+      const autosave = setInterval(() => {
+        if (
+          currentNote?.title !== workspaceData?.title ||
+          currentNote?.content !== workspaceData?.content
+        ) {
+          updateNote(workspaceData);
+        }
+      }, 5000);
+
+      return () => clearInterval(autosave);
+    }
+  }, [editMode, workspaceData]);
+
+  useEffect(() => {
+    if (!editMode && workspaceData?.id) updateNote(workspaceData);
+  }, [editMode]);
+
+  useEffect(() => {
+    setWorkspaceData(currentNote);
+  }, [currentNote]);
 
   const preparedNoteList = filteredNotes?.map((note) => {
     const contentMatch = getContentMatch(note?.content);
@@ -118,15 +146,23 @@ const Note = () => {
       <Sidebar notes={notes} currentId={currentId} onSelect={setCurrentId} />
       {editMode ? (
         <Workspace
-          title={title}
-          content={content}
-          onTitleChange={setTitle}
-          onContentChange={setContent}
+          title={workspaceData?.title ?? "Untitled"}
+          content={workspaceData?.content ?? ""}
+          onTitleChange={(title) =>
+            setWorkspaceData((prevState) => ({ ...prevState, title } as INote))
+          }
+          onContentChange={(content) =>
+            setWorkspaceData(
+              (prevState) => ({ ...prevState, content } as INote)
+            )
+          }
         />
       ) : (
         <Box sx={{ padding: "20px 40px" }}>
-          <h1>{title ?? "Untitled"}</h1>
-          <Markdown>{content.split("\n").join("\n\n") ?? ""}</Markdown>
+          <h1>{workspaceData?.title ?? "Untitled"}</h1>
+          <Markdown>
+            {workspaceData?.content.split("\n").join("\n\n") ?? ""}
+          </Markdown>
         </Box>
       )}
       <Dialog

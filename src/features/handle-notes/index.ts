@@ -50,18 +50,16 @@ export const useNotes = (userId?: string) => {
     }
   };
 
-  const updateNote = async (
-    id: string | undefined,
-    data: { title: string; content: string }
-  ) => {
-    if (id) {
-      console.log("updated", data);
-      const noteDoc = doc(db, "notes", id);
+  const updateNote = async (note?: INote) => {
+    if (note?.id) {
+      const noteDoc = doc(db, "notes", note.id);
       await updateDoc(noteDoc, {
-        title: data.title ?? "Untitled",
-        content: data.content ?? "",
+        title: note.title ?? "Untitled",
+        content: note.content ?? "",
         updated: new Date(),
       });
+
+      await getNotes();
     }
   };
 
