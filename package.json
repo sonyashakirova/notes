@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.15.0",
     "react-router-dom": "^6.15.0",
-    "react-simplemde-editor": "^5.2.0"
+    "react-simplemde-editor": "^5.2.0",
+    "vite-plugin-pwa": "^0.16.5"
   },
   "devDependencies": {
     "@types/compose-function": "^0.0.30",
