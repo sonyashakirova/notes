@@ -9,8 +9,8 @@ import {
   Fab,
 } from "@mui/material";
 import Markdown from "markdown-to-jsx";
-import { useEffect, useState } from "react";
-import { useAuth, useNotes, useSearch } from "features";
+import { useState } from "react";
+import { useAuth, useAutosave, useNotes, useSearch } from "features";
 import {
   Drawer,
   PageLayout,
@@ -19,7 +19,6 @@ import {
   Sidebar,
   Workspace,
 } from "shared/ui";
-import { INote } from "shared/types/note";
 
 const Note = () => {
   const { user, logout } = useAuth();
@@ -34,36 +33,8 @@ const Note = () => {
   } = useNotes(user?.uid);
   const { searchValue, setSearchValue, filteredNotes, getContentMatch } =
     useSearch(notes);
-
-  const [editMode, setEditMode] = useState(false);
-  const [workspaceData, setWorkspaceData] = useState<INote | undefined>();
-
-  useEffect(() => {
-    setEditMode(false);
-  }, [currentId]);
-
-  useEffect(() => {
-    if (editMode) {
-      const autosave = setInterval(() => {
-        if (
-          currentNote?.title !== workspaceData?.title ||
-          currentNote?.content !== workspaceData?.content
-        ) {
-          updateNote(workspaceData);
-        }
-      }, 5000);
-
-      return () => clearInterval(autosave);
-    }
-  }, [editMode, workspaceData]);
-
-  useEffect(() => {
-    if (!editMode && workspaceData?.id) updateNote(workspaceData);
-  }, [editMode]);
-
-  useEffect(() => {
-    setWorkspaceData(currentNote);
-  }, [currentNote]);
+  const { editMode, setEditMode, workspaceData, setTitle, setContent } =
+    useAutosave(currentId, currentNote, updateNote);
 
   const preparedNoteList = filteredNotes?.map((note) => {
     const contentMatch = getContentMatch(note?.content);
@@ -148,14 +119,8 @@ const Note = () => {
         <Workspace
           title={workspaceData?.title ?? "Untitled"}
           content={workspaceData?.content ?? ""}
-          onTitleChange={(title) =>
-            setWorkspaceData((prevState) => ({ ...prevState, title } as INote))
-          }
-          onContentChange={(content) =>
-            setWorkspaceData(
-              (prevState) => ({ ...prevState, content } as INote)
-            )
-          }
+          onTitleChange={setTitle}
+          onContentChange={setContent}
         />
       ) : (
         <Box sx={{ padding: "20px 40px" }}>
